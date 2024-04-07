@@ -1,2 +1,2 @@
 # Duplicates
-Python Script making easier to track fo duplicates files
+Python Script making easier to track for duplicates files
