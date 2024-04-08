@@ -1,10 +1,10 @@
 import hashlib
+import argparse
 from pathlib import Path
 from datetime import datetime
 
 """
 Duplicates V1.7
-BEFORE LAUNCHING THE SCRIPT, PLEASE CHANGE THE START_DIRECTORY VAR IN THE MAIN FUNCTION
 """
 
 def get_file_hash(file_path):
@@ -31,24 +31,23 @@ def find_duplicates(start_directory):
     hashes = {}
     duplicates = {}
 
-   for file_path in Path(start_directory).rglob('*'):
-        try:
-            if file_path.is_file():
-                file_hash = get_file_hash(str(file_path))
-                if file_hash in hashes:
-                    if file_hash in duplicates:
-                        duplicates[file_hash].append(str(file_path))
-                    else:
-                        duplicates[file_hash] = [hashes[file_hash], str(file_path)]
-                else:
-                    hashes[file_hash] = str(file_path)
-        except OSError as e:
-            print(f"Error processing file {file_path}: {e}")
+    for file_path in Path(start_directory).rglob('*'):
+         try:
+             if file_path.is_file():
+                 file_hash = get_file_hash(str(file_path))
+                 if file_hash in hashes:
+                     if file_hash in duplicates:
+                         duplicates[file_hash].append(str(file_path))
+                     else:
+                         duplicates[file_hash] = [hashes[file_hash], str(file_path)]
+                 else:
+                     hashes[file_hash] = str(file_path)
+         except OSError as e:
+             print(f"Error processing file {file_path}: {e}")
 
     return duplicates
 
-def main():
-    start_directory = "Path_to_start_duplicates_research"  # !!! Don't forget to update this folder directory !!!!
+def main(start_directory):
     duplicates = find_duplicates(start_directory)
 
     if duplicates:
@@ -69,4 +68,9 @@ def main():
         print("No duplicate files found.")
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-d','--directory',help='Path for duplicates research')
+    args = parser.parse_args()
+    
+    if args.directory:
+        main(args.directory)
